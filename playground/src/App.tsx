@@ -775,7 +775,7 @@ export function App(): JSX.Element {
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
           <div>
-            <h1 style={{ fontSize: 15, fontWeight: 600, margin: 0, color: '#D6003A' }}>🔴 DEPLOY TEST — diagram-kit playground</h1>
+            <h1 style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>diagram-kit playground</h1>
             <p style={{ fontSize: 12, color: '#5B6270', margin: '4px 0 0' }}>
               Params on the left, live preview on the right.
             </p>

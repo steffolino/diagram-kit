@@ -1,0 +1,34 @@
+{
+  "name": "@diagram-kit/static",
+  "version": "0.1.0",
+  "description": "Headless SVG/PNG export for diagram-kit graphs, for slides and presentations rather than embedding.",
+  "license": "MIT",
+  "author": "Stefan Stretz",
+  "keywords": ["diagram", "svg", "png", "export", "static"],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./png": {
+      "types": "./dist/png.d.ts",
+      "default": "./dist/png.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@diagram-kit/core": "workspace:*",
+    "@resvg/resvg-js": "^2.6.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

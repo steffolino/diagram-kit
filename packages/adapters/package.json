@@ -1,0 +1,35 @@
+{
+  "name": "@diagram-kit/adapters",
+  "version": "0.1.0",
+  "description": "Input adapters (YAML, directory tree, Mermaid subset, source AST) that produce a normalized @diagram-kit/core graph.",
+  "license": "MIT",
+  "author": "Stefan Stretz",
+  "keywords": ["diagram", "yaml", "mermaid", "architecture", "adapter"],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./directory": {
+      "types": "./dist/directory.d.ts",
+      "default": "./dist/directory.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@diagram-kit/core": "workspace:*",
+    "yaml": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}

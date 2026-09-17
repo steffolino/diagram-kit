@@ -1,0 +1,27 @@
+{
+  "name": "@diagram-kit/cli",
+  "version": "0.1.0",
+  "description": "Command-line rendering for diagram-kit: turn YAML/JSON/Mermaid/tree/directory input into an SVG or PNG diagram without writing any code.",
+  "license": "MIT",
+  "author": "Stefan Stretz",
+  "keywords": ["diagram", "cli", "svg", "png", "graph", "visualization"],
+  "type": "module",
+  "bin": {
+    "diagram-kit": "./dist/cli.js"
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@diagram-kit/adapters": "workspace:*",
+    "@diagram-kit/core": "workspace:*",
+    "@diagram-kit/static": "workspace:*",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}

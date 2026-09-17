@@ -1,0 +1,31 @@
+{
+  "name": "@diagram-kit/element",
+  "version": "0.1.0",
+  "description": "Framework-agnostic Custom Element (Web Component) for embedding interactive diagram-kit graphs in any app — React, Vue, Angular, or plain HTML.",
+  "license": "MIT",
+  "author": "Stefan Stretz",
+  "keywords": ["diagram", "custom-element", "web-component", "graph", "visualization"],
+  "type": "module",
+  "sideEffects": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@diagram-kit/core": "workspace:*",
+    "@diagram-kit/static": "workspace:*"
+  },
+  "devDependencies": {
+    "happy-dom": "^15.11.7",
+    "typescript": "^5.7.2"
+  }
+}

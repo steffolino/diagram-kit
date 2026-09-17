@@ -1,15 +1,15 @@
-# @diagram-kit/static
+# @steffolino/diagram-kit-static
 
-Headless SVG/PNG export for `@diagram-kit/core` graphs — for slides and
+Headless SVG/PNG export for `@steffolino/diagram-kit-core` graphs — for slides and
 presentations, not embedding. Uses `@resvg/resvg-js` (prebuilt native
 bindings, no local build toolchain needed).
 
 ```ts
-import { fromYaml } from '@diagram-kit/adapters'
-import { renderSvg } from '@diagram-kit/static'
+import { fromYaml } from '@steffolino/diagram-kit-adapters'
+import { renderSvg } from '@steffolino/diagram-kit-static'
 // Node-only, at a separate subpath — depends on a native (napi) binding
 // and must never end up in a browser bundle:
-import { renderPng } from '@diagram-kit/static/png'
+import { renderPng } from '@steffolino/diagram-kit-static/png'
 
 const graph = fromYaml(yamlSource)
 const svg = renderSvg(graph)

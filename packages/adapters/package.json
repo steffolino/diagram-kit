@@ -1,7 +1,7 @@
 {
-  "name": "@diagram-kit/adapters",
+  "name": "@steffolino/diagram-kit-adapters",
   "version": "0.1.0",
-  "description": "Input adapters (YAML, directory tree, Mermaid subset, source AST) that produce a normalized @diagram-kit/core graph.",
+  "description": "Input adapters (YAML, directory tree, Mermaid subset, source AST) that produce a normalized @steffolino/diagram-kit-core graph.",
   "license": "MIT",
   "author": "Stefan Stretz",
   "repository": {
@@ -36,7 +36,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@diagram-kit/core": "workspace:*",
+    "@steffolino/diagram-kit-core": "workspace:*",
     "yaml": "^2.6.1"
   },
   "devDependencies": {

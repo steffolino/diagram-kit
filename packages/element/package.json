@@ -1,5 +1,5 @@
 {
-  "name": "@diagram-kit/element",
+  "name": "@steffolino/diagram-kit-element",
   "version": "0.1.0",
   "description": "Framework-agnostic Custom Element (Web Component) for embedding interactive diagram-kit graphs in any app — React, Vue, Angular, or plain HTML.",
   "license": "MIT",
@@ -31,8 +31,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@diagram-kit/core": "workspace:*",
-    "@diagram-kit/static": "workspace:*"
+    "@steffolino/diagram-kit-core": "workspace:*",
+    "@steffolino/diagram-kit-static": "workspace:*"
   },
   "devDependencies": {
     "happy-dom": "^15.11.7",

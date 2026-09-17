@@ -1,5 +1,5 @@
 import { Resvg } from '@resvg/resvg-js'
-import type { DiagramGraph } from '@diagram-kit/core'
+import type { DiagramGraph } from '@steffolino/diagram-kit-core'
 import { renderSvg, type RenderSvgOptions } from './renderSvg.js'
 
 export interface RenderPngOptions extends RenderSvgOptions {

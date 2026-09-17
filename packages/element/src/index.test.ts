@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from 'vitest'
-import { createGraph } from '@diagram-kit/core'
+import { createGraph } from '@steffolino/diagram-kit-core'
 import { DiagramKitElement, defineDiagramKitElement } from './index.js'
 
 const graph = createGraph(

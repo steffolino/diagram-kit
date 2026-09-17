@@ -2,7 +2,7 @@
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { createGraph } from '@diagram-kit/core'
+import { createGraph } from '@steffolino/diagram-kit-core'
 import { DiagramView } from './DiagramView.js'
 
 describe('DiagramView padding', () => {

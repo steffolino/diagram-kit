@@ -7,12 +7,12 @@ import react from '@vitejs/plugin-react'
 // still serves from / since that var is unset outside CI.
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 
-// Workspace packages (@diagram-kit/*) are linked via pnpm and consumed as
+// Workspace packages (@steffolino/diagram-kit-*) are linked via pnpm and consumed as
 // their built dist/*.js output, not source. Vite normally pre-bundles and
 // caches deps under node_modules and ignores node_modules for file
 // watching, so a `tsc --watch` rebuild of a workspace package wouldn't
 // trigger HMR here without these two overrides.
-const workspacePackages = ['@diagram-kit/core', '@diagram-kit/static', '@diagram-kit/react', '@diagram-kit/adapters']
+const workspacePackages = ['@steffolino/diagram-kit-core', '@steffolino/diagram-kit-static', '@steffolino/diagram-kit-react', '@steffolino/diagram-kit-adapters']
 
 export default defineConfig({
   base: repoName ? `/${repoName}/` : '/',

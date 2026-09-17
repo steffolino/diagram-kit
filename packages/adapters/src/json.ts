@@ -1,4 +1,4 @@
-import type { DiagramGraph } from '@diagram-kit/core'
+import type { DiagramGraph } from '@steffolino/diagram-kit-core'
 import { type GraphSpec, graphFromSpec } from './graphSpec.js'
 
 /**

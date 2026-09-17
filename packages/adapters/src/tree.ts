@@ -1,5 +1,5 @@
-import type { DiagramGraph, DiagramNode } from '@diagram-kit/core'
-import { createGraph, validateGraph } from '@diagram-kit/core'
+import type { DiagramGraph, DiagramNode } from '@steffolino/diagram-kit-core'
+import { createGraph, validateGraph } from '@steffolino/diagram-kit-core'
 
 export interface TreeNodeInput {
   /** Defaults to a slug of the path from the root if omitted. */

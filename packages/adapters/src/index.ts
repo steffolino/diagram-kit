@@ -1,5 +1,5 @@
 // Browser-safe adapters only. `fromDirectory` uses node:fs and lives at the
-// "@diagram-kit/adapters/directory" subpath so bundling this root import
+// "@steffolino/diagram-kit-adapters/directory" subpath so bundling this root import
 // into a browser build never pulls in Node built-ins.
 export { fromYaml } from './yaml.js'
 export type { YamlGraphSpec } from './yaml.js'

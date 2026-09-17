@@ -1,5 +1,5 @@
 {
-  "name": "@diagram-kit/react",
+  "name": "@steffolino/diagram-kit-react",
   "version": "0.1.0",
   "description": "Interactive React renderer for diagram-kit graphs: auto-layout, click-to-select detail panel.",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@diagram-kit/core": "workspace:*"
+    "@steffolino/diagram-kit-core": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

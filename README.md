@@ -10,11 +10,11 @@ exported as a static SVG/PNG for slides.
 
 | Package | Purpose |
 |---|---|
-| [`@diagram-kit/core`](packages/core) | Normalized `{ nodes, edges }` graph model, `dagre`-based auto-layout, and light/dark theme tokens. Everything else depends on this, nothing here depends on React or the DOM. |
-| [`@diagram-kit/adapters`](packages/adapters) | Turns an input format into a `DiagramGraph`: `fromYaml`, `fromMermaid`, `fromArchitectureLandscape` (browser-safe, package root) and `fromDirectory` (Node-only, `@diagram-kit/adapters/directory`). |
-| [`@diagram-kit/react`](packages/react) | `<DiagramView />` — interactive renderer: auto-layout positions, click-to-select detail panel. |
-| [`@diagram-kit/static`](packages/static) | Headless `renderSvg` / `renderPng` for slide decks, via `@resvg/resvg-js` (prebuilt bindings, no native build step). |
-| `playground` | Vite + React app for manually exercising `@diagram-kit/react` during development. |
+| [`@steffolino/diagram-kit-core`](packages/core) | Normalized `{ nodes, edges }` graph model, `dagre`-based auto-layout, and light/dark theme tokens. Everything else depends on this, nothing here depends on React or the DOM. |
+| [`@steffolino/diagram-kit-adapters`](packages/adapters) | Turns an input format into a `DiagramGraph`: `fromYaml`, `fromMermaid`, `fromArchitectureLandscape` (browser-safe, package root) and `fromDirectory` (Node-only, `@steffolino/diagram-kit-adapters/directory`). |
+| [`@steffolino/diagram-kit-react`](packages/react) | `<DiagramView />` — interactive renderer: auto-layout positions, click-to-select detail panel. |
+| [`@steffolino/diagram-kit-static`](packages/static) | Headless `renderSvg` / `renderPng` for slide decks, via `@resvg/resvg-js` (prebuilt bindings, no native build step). |
+| `playground` | Vite + React app for manually exercising `@steffolino/diagram-kit-react` during development. |
 
 ## Design notes
 
@@ -43,8 +43,8 @@ exported as a static SVG/PNG for slides.
 ## Usage
 
 ```ts
-import { fromYaml } from '@diagram-kit/adapters'
-import { DiagramView } from '@diagram-kit/react'
+import { fromYaml } from '@steffolino/diagram-kit-adapters'
+import { DiagramView } from '@steffolino/diagram-kit-react'
 
 const graph = fromYaml(yamlSource)
 
@@ -54,8 +54,8 @@ function Diagram() {
 ```
 
 ```ts
-import { fromYaml } from '@diagram-kit/adapters'
-import { renderPng } from '@diagram-kit/static'
+import { fromYaml } from '@steffolino/diagram-kit-adapters'
+import { renderPng } from '@steffolino/diagram-kit-static'
 
 const png = renderPng(fromYaml(yamlSource), { scale: 2 })
 ```
@@ -80,7 +80,7 @@ without a self-edge fall back to a left-to-right graph layout.
 ```sh
 pnpm install
 pnpm build           # builds core, adapters, react, static in dependency order
-pnpm --filter @diagram-kit/playground dev
+pnpm --filter @steffolino/diagram-kit-playground dev
 ```
 
 ## Cloudflare Workers

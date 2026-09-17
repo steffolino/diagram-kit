@@ -1,11 +1,11 @@
-# @diagram-kit/cli
+# @steffolino/diagram-kit-cli
 
 Render a diagram-kit graph (YAML, JSON, Mermaid, tree text, or a directory) to
 an SVG or PNG file, without writing any code.
 
 ```sh
-npx @diagram-kit/cli render architecture.yaml -o architecture.svg
-npx @diagram-kit/cli render ./src --format directory -o structure.png --scale 2
+npx @steffolino/diagram-kit-cli render architecture.yaml -o architecture.svg
+npx @steffolino/diagram-kit-cli render ./src --format directory -o structure.png --scale 2
 ```
 
 ```

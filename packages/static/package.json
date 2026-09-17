@@ -1,5 +1,5 @@
 {
-  "name": "@diagram-kit/static",
+  "name": "@steffolino/diagram-kit-static",
   "version": "0.1.0",
   "description": "Headless SVG/PNG export for diagram-kit graphs, for slides and presentations rather than embedding.",
   "license": "MIT",
@@ -36,7 +36,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@diagram-kit/core": "workspace:*",
+    "@steffolino/diagram-kit-core": "workspace:*",
     "@resvg/resvg-js": "^2.6.2"
   },
   "devDependencies": {

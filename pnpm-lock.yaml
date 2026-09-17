@@ -29,7 +29,7 @@ importers:
 
   packages/adapters:
     dependencies:
-      '@diagram-kit/core':
+      '@steffolino/diagram-kit-core':
         specifier: workspace:*
         version: link:../core
       yaml:
@@ -45,13 +45,13 @@ importers:
 
   packages/cli:
     dependencies:
-      '@diagram-kit/adapters':
+      '@steffolino/diagram-kit-adapters':
         specifier: workspace:*
         version: link:../adapters
-      '@diagram-kit/core':
+      '@steffolino/diagram-kit-core':
         specifier: workspace:*
         version: link:../core
-      '@diagram-kit/static':
+      '@steffolino/diagram-kit-static':
         specifier: workspace:*
         version: link:../static
       commander:
@@ -83,10 +83,10 @@ importers:
 
   packages/element:
     dependencies:
-      '@diagram-kit/core':
+      '@steffolino/diagram-kit-core':
         specifier: workspace:*
         version: link:../core
-      '@diagram-kit/static':
+      '@steffolino/diagram-kit-static':
         specifier: workspace:*
         version: link:../static
     devDependencies:
@@ -99,7 +99,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@diagram-kit/core':
+      '@steffolino/diagram-kit-core':
         specifier: workspace:*
         version: link:../core
       react:
@@ -121,12 +121,12 @@ importers:
 
   packages/static:
     dependencies:
-      '@diagram-kit/core':
-        specifier: workspace:*
-        version: link:../core
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
+      '@steffolino/diagram-kit-core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       typescript:
         specifier: ^5.7.2
@@ -134,16 +134,16 @@ importers:
 
   playground:
     dependencies:
-      '@diagram-kit/adapters':
+      '@steffolino/diagram-kit-adapters':
         specifier: workspace:*
         version: link:../packages/adapters
-      '@diagram-kit/core':
+      '@steffolino/diagram-kit-core':
         specifier: workspace:*
         version: link:../packages/core
-      '@diagram-kit/react':
+      '@steffolino/diagram-kit-react':
         specifier: workspace:*
         version: link:../packages/react
-      '@diagram-kit/static':
+      '@steffolino/diagram-kit-static':
         specifier: workspace:*
         version: link:../packages/static
       react:

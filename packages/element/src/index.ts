@@ -1,6 +1,6 @@
-import type { DiagramGraph, DiagramNode, DiagramTheme, LayoutOptions } from '@diagram-kit/core'
-import { defaultTheme, themePresets, type ThemePresetName } from '@diagram-kit/core'
-import { renderSvg, type LayoutMode, type RenderSvgOptions } from '@diagram-kit/static'
+import type { DiagramGraph, DiagramNode, DiagramTheme, LayoutOptions } from '@steffolino/diagram-kit-core'
+import { defaultTheme, themePresets, type ThemePresetName } from '@steffolino/diagram-kit-core'
+import { renderSvg, type LayoutMode, type RenderSvgOptions } from '@steffolino/diagram-kit-static'
 
 const OBSERVED_ATTRIBUTES = ['layout-mode', 'mode', 'preset', 'padding', 'colorize-nodes', 'direction', 'detail-placement'] as const
 
@@ -47,7 +47,7 @@ const STYLES = `
  * element once registered.
  *
  * Usage:
- *   import '@diagram-kit/element'
+ *   import '@steffolino/diagram-kit-element'
  *   const el = document.createElement('diagram-kit-view')
  *   el.graph = myGraph
  *   document.body.appendChild(el)

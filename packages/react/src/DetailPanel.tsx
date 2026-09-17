@@ -1,6 +1,6 @@
 import type { CSSProperties, JSX } from 'react'
-import type { DiagramNode, ThemeColors } from '@diagram-kit/core'
-import { withAlpha } from '@diagram-kit/core'
+import type { DiagramNode, ThemeColors } from '@steffolino/diagram-kit-core'
+import { withAlpha } from '@steffolino/diagram-kit-core'
 
 export type DetailPanelPosition = 'top' | 'right' | 'bottom' | 'left'
 

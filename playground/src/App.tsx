@@ -7,10 +7,10 @@ import {
   type DiagramTheme,
   type LayoutOptions,
   type ThemePresetName,
-} from '@diagram-kit/core'
-import { fromYaml, fromJson, fromTreeText, fromTree } from '@diagram-kit/adapters'
-import { renderSvg } from '@diagram-kit/static'
-import { DiagramView, type DetailPanelPosition, type LayoutMode } from '@diagram-kit/react'
+} from '@steffolino/diagram-kit-core'
+import { fromYaml, fromJson, fromTreeText, fromTree } from '@steffolino/diagram-kit-adapters'
+import { renderSvg } from '@steffolino/diagram-kit-static'
+import { DiagramView, type DetailPanelPosition, type LayoutMode } from '@steffolino/diagram-kit-react'
 import { downloadPng, downloadSvg } from './exportGraph.js'
 import { treeFromFileList } from './loadDirectory.js'
 import { generateElementSnippet, generateReactSnippet } from './codeExport.js'
@@ -1257,8 +1257,8 @@ export function App(): JSX.Element {
             label="Code"
             hint={
               codeFramework === 'react'
-                ? 'A React component using @diagram-kit/react, with the current graph, theme, and settings baked in.'
-                : "Works in Vue, Angular, plain HTML, or anywhere else — it's a real Custom Element (@diagram-kit/element) once registered."
+                ? 'A React component using @steffolino/diagram-kit-react, with the current graph, theme, and settings baked in.'
+                : "Works in Vue, Angular, plain HTML, or anywhere else — it's a real Custom Element (@steffolino/diagram-kit-element) once registered."
             }
           >
             <ToggleGroup value={codeFramework} options={['react', 'element'] as const} onChange={setCodeFramework} />

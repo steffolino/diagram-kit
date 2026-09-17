@@ -1,4 +1,4 @@
-import type { TreeNodeInput } from '@diagram-kit/adapters'
+import type { TreeNodeInput } from '@steffolino/diagram-kit-adapters'
 
 interface MutableNode {
   label: string
@@ -9,7 +9,7 @@ interface MutableNode {
 /**
  * Builds a nested tree from a browser folder picker's flat `FileList` (each
  * File's `webkitRelativePath`, e.g. "myproject/src/index.ts") — a
- * client-side equivalent of `@diagram-kit/adapters/directory`'s
+ * client-side equivalent of `@steffolino/diagram-kit-adapters/directory`'s
  * `fromDirectory`, which can't run in a browser at all since it needs
  * `node:fs`.
  */

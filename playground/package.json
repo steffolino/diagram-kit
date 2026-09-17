@@ -1,17 +1,17 @@
 {
-  "name": "@diagram-kit/playground",
+  "name": "@steffolino/diagram-kit-playground",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm --filter \"@diagram-kit/playground^...\" --fail-if-no-match build && tsc -b && vite build"
+    "build": "pnpm --filter \"@steffolino/diagram-kit-playground^...\" --fail-if-no-match build && tsc -b && vite build"
   },
   "dependencies": {
-    "@diagram-kit/adapters": "workspace:*",
-    "@diagram-kit/core": "workspace:*",
-    "@diagram-kit/react": "workspace:*",
-    "@diagram-kit/static": "workspace:*",
+    "@steffolino/diagram-kit-adapters": "workspace:*",
+    "@steffolino/diagram-kit-core": "workspace:*",
+    "@steffolino/diagram-kit-react": "workspace:*",
+    "@steffolino/diagram-kit-static": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

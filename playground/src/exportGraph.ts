@@ -15,7 +15,7 @@ export function downloadSvg(svg: string, filename = 'diagram.svg'): void {
  * Rasterizes an SVG string to PNG entirely client-side (Image -> canvas ->
  * toBlob). @resvg/resvg-js (used for Node-side PNG export) is a native
  * binding and can't run in a browser, so this is a separate path, not a
- * reuse of @diagram-kit/static's renderPng.
+ * reuse of @steffolino/diagram-kit-static's renderPng.
  */
 export async function downloadPng(svg: string, scale = 2, filename = 'diagram.png'): Promise<void> {
   const svgUrl = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }))

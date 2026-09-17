@@ -1,5 +1,5 @@
 {
-  "name": "@diagram-kit/core",
+  "name": "@steffolino/diagram-kit-core",
   "version": "0.1.0",
   "description": "Normalized graph model, auto-layout, and theme tokens shared by every diagram-kit renderer and adapter.",
   "license": "MIT",

@@ -1,11 +1,11 @@
-# @diagram-kit/adapters
+# @steffolino/diagram-kit-adapters
 
-Turns an input format into a `@diagram-kit/core` `DiagramGraph`.
+Turns an input format into a `@steffolino/diagram-kit-core` `DiagramGraph`.
 
 ```ts
-import { fromYaml, fromMermaid, fromArchitectureLandscape } from '@diagram-kit/adapters'
+import { fromYaml, fromMermaid, fromArchitectureLandscape } from '@steffolino/diagram-kit-adapters'
 // Node-only, at a separate subpath so browser bundles never pull in node:fs:
-import { fromDirectory } from '@diagram-kit/adapters/directory'
+import { fromDirectory } from '@steffolino/diagram-kit-adapters/directory'
 ```
 
 - `fromYaml(source)` — hand-authored `{ nodes, edges }` YAML spec.

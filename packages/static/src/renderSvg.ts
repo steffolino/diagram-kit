@@ -5,7 +5,7 @@ import type {
   LayoutOptions,
   StackLayoutOptions,
   StructuralLayoutOptions,
-} from '@diagram-kit/core'
+} from '@steffolino/diagram-kit-core'
 import {
   layoutGraph,
   layoutCycle,
@@ -22,7 +22,7 @@ import {
   detailLines,
   detailHeight,
   type Point,
-} from '@diagram-kit/core'
+} from '@steffolino/diagram-kit-core'
 
 export type LayoutMode = 'graph' | 'structural' | 'stack' | 'cycle'
 
@@ -38,7 +38,7 @@ export interface RenderSvgOptions {
   detailPlacement?: 'panel' | 'inline'
   /** Tints each entity's own fill/border with its category color instead of a neutral surface + accent dot. Default false. */
   colorizeNodes?: boolean
-  /** Frosted-glass entities (translucent fill/border) over a soft gradient backdrop, matching @diagram-kit/react's `glass` prop. Default false. */
+  /** Frosted-glass entities (translucent fill/border) over a soft gradient backdrop, matching @steffolino/diagram-kit-react's `glass` prop. Default false. */
   glass?: boolean
 }
 
@@ -137,7 +137,7 @@ export function renderSvg(graph: DiagramGraph, options: RenderSvgOptions = {}): 
   }
 
   // Three soft, off-center radial blobs in the theme's own category colors —
-  // matches @diagram-kit/react's `glass` backdrop gradient. stop-opacity
+  // matches @steffolino/diagram-kit-react's `glass` backdrop gradient. stop-opacity
   // (rather than DiagramView's hex-alpha-suffix trick) works for any color
   // format the theme uses, not just hex.
   const backdropMarkup = glass

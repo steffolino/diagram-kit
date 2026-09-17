@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createGraph, generateTheme, layoutGraph, estimateTextWidth } from '@diagram-kit/core'
+import { createGraph, generateTheme, layoutGraph, estimateTextWidth } from '@steffolino/diagram-kit-core'
 import { renderSvg } from './renderSvg.js'
 
 const graph = createGraph(

@@ -6,7 +6,7 @@ import type {
   LayoutOptions,
   StackLayoutOptions,
   StructuralLayoutOptions,
-} from '@diagram-kit/core'
+} from '@steffolino/diagram-kit-core'
 import {
   layoutGraph,
   layoutCycle,
@@ -20,7 +20,7 @@ import {
   withAlpha,
   detailLines,
   detailHeight,
-} from '@diagram-kit/core'
+} from '@steffolino/diagram-kit-core'
 import { DetailPanel, type DetailPanelPosition } from './DetailPanel.js'
 
 export type LayoutMode = 'graph' | 'structural' | 'stack' | 'cycle'

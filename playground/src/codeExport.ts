@@ -1,5 +1,5 @@
-import type { DiagramGraph, DiagramTheme, LayoutOptions } from '@diagram-kit/core'
-import type { DetailPanelPosition, LayoutMode } from '@diagram-kit/react'
+import type { DiagramGraph, DiagramTheme, LayoutOptions } from '@steffolino/diagram-kit-core'
+import type { DetailPanelPosition, LayoutMode } from '@steffolino/diagram-kit-react'
 
 export interface CodeExportOptions {
   layoutMode: LayoutMode
@@ -32,9 +32,9 @@ function serializeGraphCall(graph: DiagramGraph): string {
  */
 export function generateReactSnippet(graph: DiagramGraph, options: CodeExportOptions): string {
   const layoutProp = options.layoutMode === 'graph' ? `\n      layout={{ direction: '${options.direction}' }}` : ''
-  return `import { DiagramView } from '@diagram-kit/react'
-import { createGraph } from '@diagram-kit/core'
-import type { DiagramTheme } from '@diagram-kit/core'
+  return `import { DiagramView } from '@steffolino/diagram-kit-react'
+import { createGraph } from '@steffolino/diagram-kit-core'
+import type { DiagramTheme } from '@steffolino/diagram-kit-core'
 
 const graph = ${serializeGraphCall(graph)}
 
@@ -61,7 +61,7 @@ export function MyDiagram() {
 
 /**
  * Framework-agnostic version using the `<diagram-kit-view>` Custom Element
- * (@diagram-kit/element) — works in Vue, Angular, plain HTML, or anywhere
+ * (@steffolino/diagram-kit-element) — works in Vue, Angular, plain HTML, or anywhere
  * else that isn't React. It has a simpler built-in detail panel (a fixed
  * top-right popup), so "glass" and detail-panel position aren't settable —
  * those stay React-only features.
@@ -82,8 +82,8 @@ export function generateElementSnippet(graph: DiagramGraph, options: CodeExportO
 <diagram-kit-view id="diagram" ${attrs}></diagram-kit-view>
 
 <script type="module">
-  import '@diagram-kit/element'
-  import { createGraph } from '@diagram-kit/core'
+  import '@steffolino/diagram-kit-element'
+  import { createGraph } from '@steffolino/diagram-kit-core'
 
   const graph = ${serializeGraphCall(graph)}
 

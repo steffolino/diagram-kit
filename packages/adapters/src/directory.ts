@@ -1,10 +1,10 @@
 // Node-only: reads the filesystem directly. Import from
-// "@diagram-kit/adapters/directory", not the package root, so this never
+// "@steffolino/diagram-kit-adapters/directory", not the package root, so this never
 // ends up in a browser bundle.
 import { readdirSync, statSync } from 'node:fs'
 import { basename, join, relative } from 'node:path'
-import type { DiagramEdge, DiagramGraph, DiagramNode } from '@diagram-kit/core'
-import { createGraph, validateGraph } from '@diagram-kit/core'
+import type { DiagramEdge, DiagramGraph, DiagramNode } from '@steffolino/diagram-kit-core'
+import { createGraph, validateGraph } from '@steffolino/diagram-kit-core'
 
 export interface DirectoryGraphOptions {
   /** Directory/file names to skip entirely, e.g. node_modules, .git. */

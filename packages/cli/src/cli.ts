@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { existsSync, statSync, writeFileSync } from 'node:fs'
 import { Command } from 'commander'
-import type { ThemePresetName } from '@diagram-kit/core'
-import { themePresets } from '@diagram-kit/core'
+import type { ThemePresetName } from '@steffolino/diagram-kit-core'
+import { themePresets } from '@steffolino/diagram-kit-core'
 import { CliError, detectFormat, parseGraph, renderGraph, type InputFormat } from './render.js'
 
 const program = new Command()

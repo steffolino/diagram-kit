@@ -1,11 +1,11 @@
-# @diagram-kit/react
+# @steffolino/diagram-kit-react
 
-Interactive React renderer for `@diagram-kit/core` graphs: real `dagre`
+Interactive React renderer for `@steffolino/diagram-kit-core` graphs: real `dagre`
 auto-layout, click-to-select detail panel.
 
 ```tsx
-import { fromYaml } from '@diagram-kit/adapters'
-import { DiagramView } from '@diagram-kit/react'
+import { fromYaml } from '@steffolino/diagram-kit-adapters'
+import { DiagramView } from '@steffolino/diagram-kit-react'
 
 const graph = fromYaml(yamlSource)
 

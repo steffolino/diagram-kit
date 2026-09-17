@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs'
 import { extname } from 'node:path'
-import type { DiagramGraph, LayoutOptions, ThemePresetName } from '@diagram-kit/core'
-import { themePresets, defaultTheme } from '@diagram-kit/core'
-import { fromYaml, fromJson, fromMermaid, fromTreeText } from '@diagram-kit/adapters'
-import { fromDirectory } from '@diagram-kit/adapters/directory'
-import { renderSvg, type LayoutMode, type RenderSvgOptions } from '@diagram-kit/static'
-import { renderPng } from '@diagram-kit/static/png'
+import type { DiagramGraph, LayoutOptions, ThemePresetName } from '@steffolino/diagram-kit-core'
+import { themePresets, defaultTheme } from '@steffolino/diagram-kit-core'
+import { fromYaml, fromJson, fromMermaid, fromTreeText } from '@steffolino/diagram-kit-adapters'
+import { fromDirectory } from '@steffolino/diagram-kit-adapters/directory'
+import { renderSvg, type LayoutMode, type RenderSvgOptions } from '@steffolino/diagram-kit-static'
+import { renderPng } from '@steffolino/diagram-kit-static/png'
 
 export type InputFormat = 'yaml' | 'json' | 'mermaid' | 'tree' | 'directory'
 

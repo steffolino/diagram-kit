@@ -1,5 +1,5 @@
-import type { DiagramEdge, DiagramGraph, DiagramNode } from '@diagram-kit/core'
-import { createGraph, validateGraph } from '@diagram-kit/core'
+import type { DiagramEdge, DiagramGraph, DiagramNode } from '@steffolino/diagram-kit-core'
+import { createGraph, validateGraph } from '@steffolino/diagram-kit-core'
 
 /**
  * Shape produced by a Python `ast`-module walker over a DDD-style backend

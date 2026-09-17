@@ -516,7 +516,10 @@ const RESPONSIVE_CSS = `
     .dk-app-root { height: 100dvh; }
     .dk-panel { height: 100dvh; }
   }
-  @media (max-width: 480px) {
+  /* Full-width drawer on phones — same pattern as DaisyUI's "drawer"
+     component: an off-canvas panel that overlays the page entirely on
+     small screens, rather than a narrow sliver squeezed in beside it. */
+  @media (max-width: 768px) {
     .dk-panel { width: 100vw; max-width: 100vw; }
   }
 `

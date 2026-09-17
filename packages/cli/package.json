@@ -1,6 +1,6 @@
 {
   "name": "@steffolino/diagram-kit-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Command-line rendering for diagram-kit: turn YAML/JSON/Mermaid/tree/directory input into an SVG or PNG diagram without writing any code.",
   "license": "MIT",
   "author": "Stefan Stretz",

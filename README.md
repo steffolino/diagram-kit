@@ -67,3 +67,13 @@ pnpm install
 pnpm build           # builds core, adapters, react, static in dependency order
 pnpm --filter @diagram-kit/playground dev
 ```
+
+## Cloudflare Pages
+
+Use `playground` as the root directory, `pnpm run build` as the build command,
+and `dist` as the build output directory. The playground build compiles its
+workspace dependencies before type-checking and bundling the app, so it also
+works on a fresh checkout without existing package `dist` folders.
+
+The GitHub Pages workflow in `.github/workflows/deploy-playground.yml` is
+separate from Cloudflare's build configuration.

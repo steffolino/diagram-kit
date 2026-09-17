@@ -68,6 +68,16 @@ pnpm build           # builds core, adapters, react, static in dependency order
 pnpm --filter @diagram-kit/playground dev
 ```
 
+## Cloudflare Workers
+
+Use `playground` as the root directory, `pnpm run build` as the build command,
+and `npx wrangler deploy` as the deploy command. The committed
+`playground/wrangler.jsonc` serves `dist` as static assets with SPA fallback.
+Its Worker name is `diagram-kit`; keep it in sync with the Cloudflare project.
+
+The explicit Wrangler configuration avoids automatic framework setup, which
+can select npm inside this pnpm workspace and fail on `workspace:*` dependencies.
+
 ## Cloudflare Pages
 
 Use `playground` as the root directory, `pnpm run build` as the build command,

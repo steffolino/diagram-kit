@@ -1,6 +1,6 @@
 {
   "name": "@steffolino/diagram-kit-react",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "Interactive React renderer for diagram-kit graphs: auto-layout, click-to-select detail panel.",
   "license": "MIT",
   "author": "Stefan Stretz",

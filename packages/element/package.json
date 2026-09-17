@@ -1,6 +1,6 @@
 {
   "name": "@steffolino/diagram-kit-element",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "Framework-agnostic Custom Element (Web Component) for embedding interactive diagram-kit graphs in any app — React, Vue, Angular, or plain HTML.",
   "license": "MIT",
   "author": "Stefan Stretz",

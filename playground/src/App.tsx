@@ -301,10 +301,10 @@ const FALLBACK_PALETTE = ['#3B6EA5', '#5F8D6B', '#A5763B', '#7A5FA5', '#3F8A8C',
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }): JSX.Element {
   return (
-    <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12 }}>
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 5, fontSize: 13 }}>
       <span style={{ color: '#5B6270', fontWeight: 500 }}>{label}</span>
       {children}
-      {hint && <span style={{ color: '#8A909B', fontSize: 11, lineHeight: 1.4 }}>{hint}</span>}
+      {hint && <span style={{ color: '#8A909B', fontSize: 12, lineHeight: 1.45 }}>{hint}</span>}
     </label>
   )
 }
@@ -445,11 +445,13 @@ function Section({
 // the diagram (rather than pushing it over) at every viewport width, with
 // its own width narrowing on small screens.
 const RESPONSIVE_CSS = `
+  html, body { margin: 0; padding: 0; }
+  .dk-app-root { height: 100vh; }
   .dk-section { border-top: 1px solid #EEEEF0; padding-top: 12px; }
   .dk-section:first-of-type { border-top: none; padding-top: 0; }
   .dk-section-summary {
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #1F2328;
     list-style: none;
@@ -462,6 +464,7 @@ const RESPONSIVE_CSS = `
     top: 0;
     left: 0;
     bottom: 0;
+    height: 100vh;
     z-index: 40;
     transform: translateX(-100%);
     transition: transform 0.2s ease;
@@ -469,6 +472,10 @@ const RESPONSIVE_CSS = `
     width: 340px;
     max-width: 85vw;
     box-sizing: border-box;
+    /* Scroll the drawer's own content on touch devices without the
+       gesture leaking through to (and rubber-banding) the page behind it. */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .dk-panel.dk-panel-open { transform: translateX(0); }
   .dk-menu-button {
@@ -489,6 +496,15 @@ const RESPONSIVE_CSS = `
     transition: opacity 0.2s ease;
   }
   .dk-scrim.dk-scrim-visible { opacity: 1; pointer-events: auto; }
+  /* 100dvh accounts for the browser's own on-screen UI (address bar, etc.)
+     — without it, a plain 100vh fixed drawer can be taller than what's
+     actually visible on mobile, so the tail end of its content is never
+     reachable no matter how you scroll. Layered in via @supports so
+     browsers without dvh keep the 100vh they already have. */
+  @supports (height: 100dvh) {
+    .dk-app-root { height: 100dvh; }
+    .dk-panel { height: 100dvh; }
+  }
   @media (max-width: 480px) {
     .dk-panel { width: 100vw; max-width: 100vw; }
   }
@@ -717,7 +733,7 @@ export function App(): JSX.Element {
   ])
 
   return (
-    <div style={{ display: 'flex', height: '100vh', fontFamily: 'system-ui, sans-serif', color: '#1F2328' }}>
+    <div className="dk-app-root" style={{ display: 'flex', height: '100vh', fontFamily: 'system-ui, sans-serif', color: '#1F2328' }}>
       <style>{RESPONSIVE_CSS}</style>
 
       <button
@@ -748,8 +764,9 @@ export function App(): JSX.Element {
         style={{
           flexShrink: 0,
           borderRight: '1px solid #DADCE0',
-          padding: 20,
+          padding: '20px 20px 40px',
           overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
           display: 'flex',
           flexDirection: 'column',
           gap: 8,
@@ -864,7 +881,7 @@ export function App(): JSX.Element {
                 onChange={(e) => setTextSource(e.target.value)}
                 rows={12}
                 spellCheck={false}
-                style={{ fontFamily: 'monospace', fontSize: 11, padding: 8, resize: 'vertical' }}
+                style={{ fontFamily: 'monospace', fontSize: 12, padding: 8, resize: 'vertical' }}
               />
             </Field>
           )}
@@ -912,7 +929,7 @@ export function App(): JSX.Element {
                 <button
                   type="button"
                   onClick={() => setCustomBackground(null)}
-                  style={{ fontSize: 11, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
+                  style={{ fontSize: 12, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
                 >
                   Reset
                 </button>
@@ -941,7 +958,7 @@ export function App(): JSX.Element {
                 <button
                   type="button"
                   onClick={() => setCustomBorder(null)}
-                  style={{ fontSize: 11, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
+                  style={{ fontSize: 12, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
                 >
                   Reset
                 </button>
@@ -970,7 +987,7 @@ export function App(): JSX.Element {
                 <button
                   type="button"
                   onClick={() => setCustomAccent(null)}
-                  style={{ fontSize: 11, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
+                  style={{ fontSize: 12, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
                 >
                   Reset
                 </button>
@@ -1050,7 +1067,7 @@ export function App(): JSX.Element {
                 }}
                 style={{
                   marginTop: 6,
-                  fontSize: 11,
+                  fontSize: 12,
                   padding: '4px 8px',
                   border: '1px solid #DADCE0',
                   borderRadius: 4,
@@ -1116,7 +1133,7 @@ export function App(): JSX.Element {
                 placeholder={':root {\n  --brand: #3b82f6;\n  --accent: #f43f5e;\n}'}
                 rows={5}
                 spellCheck={false}
-                style={{ fontFamily: 'monospace', fontSize: 11, padding: 8, resize: 'vertical' }}
+                style={{ fontFamily: 'monospace', fontSize: 12, padding: 8, resize: 'vertical' }}
               />
               <button
                 type="button"
@@ -1136,7 +1153,7 @@ export function App(): JSX.Element {
                 Extract &amp; apply colors
               </button>
               {cssImportMessage && (
-                <p style={{ fontSize: 11, color: '#5B6270', margin: '4px 0 0' }}>{cssImportMessage}</p>
+                <p style={{ fontSize: 12, color: '#5B6270', margin: '4px 0 0' }}>{cssImportMessage}</p>
               )}
             </Field>
           )}

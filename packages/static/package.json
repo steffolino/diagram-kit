@@ -4,6 +4,16 @@
   "description": "Headless SVG/PNG export for diagram-kit graphs, for slides and presentations rather than embedding.",
   "license": "MIT",
   "author": "Stefan Stretz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffolino/diagram-kit.git",
+    "directory": "packages/static"
+  },
+  "homepage": "https://github.com/steffolino/diagram-kit/tree/master/packages/static#readme",
+  "bugs": "https://github.com/steffolino/diagram-kit/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["diagram", "svg", "png", "export", "static"],
   "type": "module",
   "sideEffects": false,

@@ -4,6 +4,16 @@
   "description": "Input adapters (YAML, directory tree, Mermaid subset, source AST) that produce a normalized @diagram-kit/core graph.",
   "license": "MIT",
   "author": "Stefan Stretz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffolino/diagram-kit.git",
+    "directory": "packages/adapters"
+  },
+  "homepage": "https://github.com/steffolino/diagram-kit/tree/master/packages/adapters#readme",
+  "bugs": "https://github.com/steffolino/diagram-kit/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["diagram", "yaml", "mermaid", "architecture", "adapter"],
   "type": "module",
   "sideEffects": false,

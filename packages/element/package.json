@@ -4,6 +4,16 @@
   "description": "Framework-agnostic Custom Element (Web Component) for embedding interactive diagram-kit graphs in any app — React, Vue, Angular, or plain HTML.",
   "license": "MIT",
   "author": "Stefan Stretz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffolino/diagram-kit.git",
+    "directory": "packages/element"
+  },
+  "homepage": "https://github.com/steffolino/diagram-kit/tree/master/packages/element#readme",
+  "bugs": "https://github.com/steffolino/diagram-kit/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["diagram", "custom-element", "web-component", "graph", "visualization"],
   "type": "module",
   "sideEffects": true,

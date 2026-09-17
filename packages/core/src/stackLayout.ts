@@ -1,8 +1,10 @@
 import type { DiagramGraph } from './graph.js'
 import type { PositionedGraph, PositionedNode } from './layout.js'
 import { estimateNodeWidth } from './textWidth.js'
+import { detailHeight } from './detailText.js'
 
 export interface StackLayoutOptions {
+  showDetails?: boolean
   direction?: 'vertical' | 'horizontal'
   gap?: number
   /** Minimum node width — nodes with longer labels grow wider to fit, up to `maxNodeWidth`, when `nodeSizing` is "responsive". Default 200. */
@@ -15,6 +17,7 @@ export interface StackLayoutOptions {
 }
 
 const DEFAULTS: Required<StackLayoutOptions> = {
+  showDetails: false,
   direction: 'vertical',
   gap: 10,
   nodeWidth: 200,
@@ -46,19 +49,21 @@ export function layoutStack(graph: DiagramGraph, options: StackLayoutOptions = {
     const overallWidth = Math.max(0, ...widths)
     graph.nodes.forEach((node, i) => {
       const width = widths[i]!
-      nodes.push({ id: node.id, x: overallWidth / 2, y: cursor + opts.nodeHeight / 2, width, height: opts.nodeHeight })
-      cursor += opts.nodeHeight + opts.gap
+      const height = opts.nodeHeight + detailHeight(node, width, opts.showDetails)
+      nodes.push({ id: node.id, x: overallWidth / 2, y: cursor + height / 2, width, height })
+      cursor += height + opts.gap
     })
   } else {
     graph.nodes.forEach((node, i) => {
       const width = widths[i]!
-      nodes.push({ id: node.id, x: cursor + width / 2, y: opts.nodeHeight / 2, width, height: opts.nodeHeight })
+      const height = opts.nodeHeight + detailHeight(node, width, opts.showDetails)
+      nodes.push({ id: node.id, x: cursor + width / 2, y: height / 2, width, height })
       cursor += width + opts.gap
     })
   }
 
   const width = opts.direction === 'vertical' ? Math.max(0, ...widths) : Math.max(0, cursor - opts.gap)
-  const height = opts.direction === 'vertical' ? Math.max(0, cursor - opts.gap) : opts.nodeHeight
+  const height = opts.direction === 'vertical' ? Math.max(0, cursor - opts.gap) : Math.max(0, ...nodes.map((node) => node.height))
 
   return { nodes, edges: [], width, height }
 }

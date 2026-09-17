@@ -9,6 +9,7 @@ import type {
 } from '@diagram-kit/core'
 import {
   layoutGraph,
+  layoutCycle,
   layoutStructural,
   layoutStack,
   defaultTheme,
@@ -17,20 +18,26 @@ import {
   blockArrowPoints,
   pointsToPolygon,
   withAlpha,
+  detailLines,
+  detailHeight,
 } from '@diagram-kit/core'
 import { DetailPanel, type DetailPanelPosition } from './DetailPanel.js'
 
-export type LayoutMode = 'graph' | 'structural' | 'stack'
+export type LayoutMode = 'graph' | 'structural' | 'stack' | 'cycle'
 
 export interface DiagramViewProps {
   graph: DiagramGraph
-  /** Which layout algorithm positions nodes. "graph" (default): dagre DAG layout, edges drawn as routed lines. "structural": nested boxes from `parentId` containment, no connectors. "stack": flat sequential list, no hierarchy, no connectors. */
+  /** "graph" (default): dagre layout. "structural": nested containment. "stack": sequential list. "cycle": left-to-right process with circular repeat loops. */
   layoutMode?: LayoutMode
   layout?: LayoutOptions
   structuralLayout?: StructuralLayoutOptions
   stackLayout?: StackLayoutOptions
   theme?: DiagramTheme
   mode?: 'light' | 'dark'
+  /** Space around the graph, included in the diagram background. Default 0. */
+  padding?: number
+  /** Show descriptions in a panel on selection (default), or below titles. */
+  detailPlacement?: 'panel' | 'inline'
   /** Renders a built-in detail panel on node click when true (default). Pass false to only use onSelect. */
   showDetailPanel?: boolean
   /** Which edge of the diagram the detail panel docks to. Default "right". */
@@ -55,12 +62,13 @@ function NodeContent({ node, accent, colors }: { node: DiagramNode; accent: stri
 }
 
 /**
- * Interactive diagram, three layout modes sharing one renderer: "graph"
+ * Interactive diagram, four layout modes sharing one renderer: "graph"
  * (real dagre auto-layout, edges drawn as routed lines or chunky block
  * arrows), "structural" (nested boxes from containment, no connectors —
  * a context card containing its layers, a directory containing its
  * files), and "stack" (a flat sequential list, no hierarchy at all).
- * Clicking a node opens a detail panel in every mode.
+ * "cycle" adds circular repeat loops to a left-to-right process.
+ * Descriptions appear on selection or inline beneath titles.
  */
 export function DiagramView({
   graph,
@@ -70,6 +78,8 @@ export function DiagramView({
   stackLayout,
   theme = defaultTheme,
   mode = 'light',
+  padding = 0,
+  detailPlacement = 'panel',
   showDetailPanel = true,
   detailPanelPosition = 'right',
   glass = false,
@@ -78,6 +88,7 @@ export function DiagramView({
 }: DiagramViewProps): JSX.Element {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const colors = theme[mode]
+  const showDetails = detailPlacement === 'inline'
 
   const backdropGradient = useMemo(() => {
     if (!glass) return undefined
@@ -86,10 +97,11 @@ export function DiagramView({
   }, [glass, colors])
 
   const positioned = useMemo(() => {
-    if (layoutMode === 'structural') return layoutStructural(graph, structuralLayout)
-    if (layoutMode === 'stack') return layoutStack(graph, stackLayout)
-    return layoutGraph(graph, layout)
-  }, [graph, layout, structuralLayout, stackLayout, layoutMode])
+    if (layoutMode === 'cycle') return layoutCycle(graph, { showDetails })
+    if (layoutMode === 'structural') return layoutStructural(graph, { ...structuralLayout, showDetails })
+    if (layoutMode === 'stack') return layoutStack(graph, { ...stackLayout, showDetails })
+    return layoutGraph(graph, { ...layout, showDetails })
+  }, [graph, layout, structuralLayout, stackLayout, layoutMode, showDetails])
 
   const nodeById = useMemo(() => new Map(graph.nodes.map((n) => [n.id, n])), [graph.nodes])
   const containerIds = useMemo(
@@ -126,10 +138,16 @@ export function DiagramView({
 
   const chipStyle = (node: DiagramNode, selected: boolean, accent: string) => ({
     display: 'flex' as const,
-    alignItems: 'center' as const,
+    // With inline detail text, pin the title to a fixed offset from the box
+    // top (rather than centering) so it lines up across nodes whose boxes
+    // are taller than their own content (e.g. cycle mode's uniform-height
+    // boxes) — centering would push shorter-text titles down out of line
+    // with the rest of the row. With no inline detail, there's nothing
+    // below the title to align against, so just center it in the box.
+    alignItems: (showDetails ? 'flex-start' : 'center') as 'flex-start' | 'center',
     justifyContent: 'center' as const,
     gap: 6,
-    padding: '0 10px',
+    padding: showDetails ? '14px 10px 0' : '0 10px',
     borderRadius: 8,
     border: `1px solid ${entityBorder(accent, selected)}`,
     background: entityFill(accent, 0.3, 0.14),
@@ -141,6 +159,26 @@ export function DiagramView({
     cursor: 'pointer' as const,
     boxShadow: selected ? `0 0 0 2px ${accent}33` : undefined,
   })
+
+  function renderDescription(node: DiagramNode, width: number): ReactNode {
+    const lines = showDetails ? detailLines(node.detail, width - 24) : []
+    return lines.length > 0 ? (
+      <span style={{ display: 'block', marginTop: 8, fontSize: 11, lineHeight: '15px', fontWeight: 400, color: colors.textMuted, textAlign: 'center' }}>
+        {lines.map((line, i) => <span key={i} style={{ display: 'block', whiteSpace: 'pre' }}>{line || '\u00a0'}</span>)}
+      </span>
+    ) : null
+  }
+
+  function renderContent(node: DiagramNode, width: number, accent: string): ReactNode {
+    return (
+      <span style={{ display: 'block', width: '100%', minWidth: 0 }}>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <NodeContent node={node} accent={accent} colors={colors} />
+        </span>
+        {renderDescription(node, width)}
+      </span>
+    )
+  }
 
   function renderLeaf(node: DiagramNode, position: { x: number; y: number; width: number; height: number }): ReactNode {
     const selected = node.id === selectedId
@@ -202,7 +240,7 @@ export function DiagramView({
               fontWeight: 500,
             }}
           >
-            <NodeContent node={node} accent={accent} colors={colors} />
+            {renderContent(node, position.width, accent)}
           </div>
         </div>
       )
@@ -216,7 +254,7 @@ export function DiagramView({
         onClick={() => select(node.id)}
         style={{ position: 'absolute', left, top, width: position.width, height: position.height, ...chipStyle(node, selected, accent) }}
       >
-        <NodeContent node={node} accent={accent} colors={colors} />
+        {renderContent(node, position.width, accent)}
       </button>
     )
   }
@@ -273,6 +311,9 @@ export function DiagramView({
             <span style={{ fontSize: 10, fontWeight: 500, color: colors.textMuted }}>{node.badge}</span>
           )}
         </button>
+        <div style={{ padding: '0 12px', height: detailHeight(node, position.width, showDetails) }}>
+          {renderDescription(node, position.width)}
+        </div>
       </div>
     )
   }
@@ -281,33 +322,64 @@ export function DiagramView({
     <div
       style={{
         position: 'relative',
-        width: positioned.width,
-        height: positioned.height,
+        width: positioned.width + padding * 2,
+        height: positioned.height + padding * 2,
         background: backdropGradient ? `${backdropGradient}, ${colors.background}` : colors.background,
       }}
     >
-      {positioned.edges.length > 0 && (
-        <svg
-          width={positioned.width}
-          height={positioned.height}
-          style={{ position: 'absolute', inset: 0 }}
-          aria-hidden="true"
-          focusable="false"
-        >
-          {positioned.edges.map((edge) => {
-            const source = graph.edges.find((e) => e.id === edge.id)
-            const strokeColor = source?.projected ? colors.edgeProjected : colors.edge
-            const midpoint = edge.points[Math.floor((edge.points.length - 1) / 2)]
+      <div style={{ position: 'absolute', left: padding, top: padding, width: positioned.width, height: positioned.height }}>
+        {positioned.edges.length > 0 && (
+          <svg
+            width={positioned.width}
+            height={positioned.height}
+            style={{ position: 'absolute', inset: 0 }}
+            aria-hidden="true"
+            focusable="false"
+          >
+            {positioned.edges.map((edge) => {
+              const source = graph.edges.find((e) => e.id === edge.id)
+              const strokeColor = layoutMode === 'cycle' && source && source.source === source.target
+                ? categoryColor(nodeById.get(source.source)?.category, theme, mode)
+                : source?.projected ? colors.edgeProjected : colors.edge
+              const midpoint = edge.points[Math.floor((edge.points.length - 1) / 2)]
 
-            if (source?.style === 'block') {
-              const polygon = blockArrowPoints(edge.points)
+              if (edge.arrow || source?.style === 'block') {
+                const polygon = edge.arrow ?? blockArrowPoints(edge.points)
+                return (
+                  <g key={edge.id}>
+                    <polygon points={pointsToPolygon(polygon)} fill={strokeColor} opacity={0.85} />
+                  {source?.label && midpoint && (
+                      <text
+                        x={midpoint.x}
+                        y={midpoint.y - 12}
+                        textAnchor="middle"
+                        fontSize={10}
+                        fill={colors.textMuted}
+                        stroke={colors.background}
+                        strokeWidth={4}
+                        paintOrder="stroke"
+                      >
+                        {source.label}
+                      </text>
+                    )}
+                  </g>
+                )
+              }
+
+              const strokeWidth = 1 + ((source?.weight ?? 1) / maxWeight) * 2
               return (
                 <g key={edge.id}>
-                  <polygon points={pointsToPolygon(polygon)} fill={strokeColor} opacity={0.85} />
-                  {source.label && midpoint && (
+                  <path
+                    d={pointsToSvgPath(edge.points)}
+                    fill="none"
+                    stroke={strokeColor}
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={source?.projected ? '4 3' : undefined}
+                  />
+                  {source?.label && midpoint && (
                     <text
                       x={midpoint.x}
-                      y={midpoint.y - 12}
+                      y={midpoint.y - 6}
                       textAnchor="middle"
                       fontSize={10}
                       fill={colors.textMuted}
@@ -320,55 +392,28 @@ export function DiagramView({
                   )}
                 </g>
               )
-            }
+            })}
+          </svg>
+        )}
 
-            const strokeWidth = 1 + ((source?.weight ?? 1) / maxWeight) * 2
-            return (
-              <g key={edge.id}>
-                <path
-                  d={pointsToSvgPath(edge.points)}
-                  fill="none"
-                  stroke={strokeColor}
-                  strokeWidth={strokeWidth}
-                  strokeDasharray={source?.projected ? '4 3' : undefined}
-                />
-                {source?.label && midpoint && (
-                  <text
-                    x={midpoint.x}
-                    y={midpoint.y - 6}
-                    textAnchor="middle"
-                    fontSize={10}
-                    fill={colors.textMuted}
-                    stroke={colors.background}
-                    strokeWidth={4}
-                    paintOrder="stroke"
-                  >
-                    {source.label}
-                  </text>
-                )}
-              </g>
-            )
-          })}
-        </svg>
-      )}
+        {positioned.nodes.map((position) => {
+          const node = nodeById.get(position.id)
+          if (!node) return null
+          if (layoutMode === 'structural' && containerIds.has(node.id)) {
+            return renderContainer(node, position)
+          }
+          return renderLeaf(node, position)
+        })}
 
-      {positioned.nodes.map((position) => {
-        const node = nodeById.get(position.id)
-        if (!node) return null
-        if (layoutMode === 'structural' && containerIds.has(node.id)) {
-          return renderContainer(node, position)
-        }
-        return renderLeaf(node, position)
-      })}
-
-      {showDetailPanel && selectedNode && (
+      </div>
+      {!showDetails && showDetailPanel && selectedNode && (
         <DetailPanel
           node={selectedNode}
           colors={colors}
           position={detailPanelPosition}
           glass={glass}
-          containerWidth={positioned.width}
-          containerHeight={positioned.height}
+          containerWidth={positioned.width + padding * 2}
+          containerHeight={positioned.height + padding * 2}
           onClose={() => select(null)}
         />
       )}

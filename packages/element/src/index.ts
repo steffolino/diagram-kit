@@ -2,7 +2,7 @@ import type { DiagramGraph, DiagramNode, DiagramTheme, LayoutOptions } from '@di
 import { defaultTheme, themePresets, type ThemePresetName } from '@diagram-kit/core'
 import { renderSvg, type LayoutMode, type RenderSvgOptions } from '@diagram-kit/static'
 
-const OBSERVED_ATTRIBUTES = ['layout-mode', 'mode', 'preset', 'padding', 'colorize-nodes', 'direction'] as const
+const OBSERVED_ATTRIBUTES = ['layout-mode', 'mode', 'preset', 'padding', 'colorize-nodes', 'direction', 'detail-placement'] as const
 
 const STYLES = `
   :host { display: block; position: relative; }
@@ -91,7 +91,7 @@ export class DiagramKitElement extends HTMLElement {
       const nodeId = nodeGroup.getAttribute('data-node-id')
       const node = this.#graph?.nodes.find((n) => n.id === nodeId)
       if (!node) return
-      this.#showPanel(node)
+      if (this.getAttribute('detail-placement') !== 'inline') this.#showPanel(node)
       this.dispatchEvent(
         new CustomEvent('node-click', { detail: { nodeId: node.id, node }, bubbles: true, composed: true }),
       )
@@ -103,6 +103,7 @@ export class DiagramKitElement extends HTMLElement {
   }
 
   attributeChangedCallback(): void {
+    this.#panel.classList.remove('dk-panel-open')
     this.#render()
   }
 
@@ -179,6 +180,7 @@ export class DiagramKitElement extends HTMLElement {
       mode,
       padding,
       colorizeNodes,
+      detailPlacement: this.getAttribute('detail-placement') === 'inline' ? 'inline' : 'panel',
       layout: direction ? { direction } : undefined,
     }
     this.#wrap.innerHTML = renderSvg(this.#graph, options)

@@ -62,6 +62,21 @@ const png = renderPng(fromYaml(yamlSource), { scale: 2 })
 
 ## Development
 
+Descriptions can appear beneath entity titles with
+`<DiagramView detailPlacement="inline" ... />`, or in the click-to-open panel
+with `detailPlacement="panel"` (the default). Inline descriptions wrap and
+expand their boxes in every layout, including nested containers. Use the same
+`detailPlacement` option with `renderSvg` / `renderPng`, or the
+`detail-placement="inline"` attribute on `<diagram-kit-view>`. The playground's
+**Description placement** control also updates downloads and code snippets.
+
+The Scrum sample defaults to the landscape, left-to-right `cycle` layout:
+backlog and planning feed a large Sprint loop, with a smaller Daily Scrum loop
+and finished work to the right. There are no person icons. In cycle mode, the
+first self-edge defines the main repeat loop and other self-edges define the
+smaller loops. Input and output steps follow their order in the source. Graphs
+without a self-edge fall back to a left-to-right graph layout.
+
 ```sh
 pnpm install
 pnpm build           # builds core, adapters, react, static in dependency order

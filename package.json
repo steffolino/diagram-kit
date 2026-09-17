@@ -8,7 +8,7 @@
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
-    "dev": "pnpm --filter @diagram-kit/playground dev"
+    "dev": "pnpm -r --parallel --if-present run dev"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

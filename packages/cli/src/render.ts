@@ -50,6 +50,7 @@ export interface RenderOptions {
   mode?: 'light' | 'dark'
   padding?: number
   colorizeNodes?: boolean
+  glass?: boolean
   scale?: number
 }
 
@@ -67,6 +68,7 @@ function toSvgOptions(options: RenderOptions): RenderSvgOptions {
     mode: options.mode ?? 'light',
     padding: options.padding ?? 24,
     colorizeNodes: options.colorizeNodes ?? false,
+    glass: options.glass ?? false,
   }
 }
 

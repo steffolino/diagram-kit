@@ -1,8 +1,10 @@
 import dagre from '@dagrejs/dagre'
 import type { DiagramGraph } from './graph.js'
 import { estimateNodeWidth } from './textWidth.js'
+import { detailHeight } from './detailText.js'
 
 export interface LayoutOptions {
+  showDetails?: boolean
   /** Layout flow direction, dagre's rankdir. Default "TB" (top-to-bottom). */
   direction?: 'TB' | 'BT' | 'LR' | 'RL'
   /** Minimum node width — nodes with longer labels grow wider to fit, up to `maxNodeWidth`, when `nodeSizing` is "responsive". Default 160. */
@@ -28,6 +30,8 @@ export interface PositionedNode {
 
 export interface PositionedEdge {
   id: string
+  /** Optional filled arrow outline supplied by a specialized layout. */
+  arrow?: Array<{ x: number; y: number }>
   /** Full point list dagre routed the edge through, including endpoints. */
   points: Array<{ x: number; y: number }>
 }
@@ -40,6 +44,7 @@ export interface PositionedGraph {
 }
 
 const DEFAULTS: Required<LayoutOptions> = {
+  showDetails: false,
   direction: 'TB',
   nodeWidth: 160,
   maxNodeWidth: 420,
@@ -66,7 +71,7 @@ export function layoutGraph(graph: DiagramGraph, options: LayoutOptions = {}): P
       minWidth: opts.nodeWidth,
       maxWidth: opts.nodeSizing === 'fixed' ? opts.nodeWidth : opts.maxNodeWidth,
     })
-    g.setNode(node.id, { width, height: opts.nodeHeight })
+    g.setNode(node.id, { width, height: opts.nodeHeight + detailHeight(node, width, opts.showDetails) })
   }
   for (const edge of graph.edges) {
     g.setEdge(edge.source, edge.target, {}, edge.id)

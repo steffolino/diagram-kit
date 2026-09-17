@@ -18,13 +18,14 @@ program
   .argument('<input>', 'path to a YAML/JSON/Mermaid/tree-text file, or a directory')
   .requiredOption('-o, --out <file>', 'output path, ending in .svg or .png')
   .option('-f, --format <format>', 'input format: yaml, json, mermaid, tree, directory (auto-detected when omitted)')
-  .option('-l, --layout <mode>', 'layout mode: graph, structural, stack', 'graph')
+  .option('-l, --layout <mode>', 'layout mode: graph, structural, stack, cycle', 'graph')
   .option('--direction <direction>', 'graph layout direction: TB, BT, LR, RL')
   .option('--node-sizing <mode>', 'responsive (grow to fit label) or fixed (truncate with ellipsis)')
   .option('--preset <name>', `theme preset: ${Object.keys(themePresets).join(', ')}`)
   .option('--mode <mode>', 'light or dark', 'light')
   .option('--padding <px>', 'margin around the diagram, in pixels', '24')
   .option('--colorize-nodes', 'tint entity backgrounds with their category color, not just an accent dot')
+  .option('--glass', 'frosted-glass entities (translucent fill/border) over a soft gradient backdrop')
   .option('--scale <n>', 'PNG output pixel scale', '2')
   .action((input: string, opts) => {
     try {
@@ -45,6 +46,7 @@ program
         mode: opts.mode,
         padding: Number(opts.padding),
         colorizeNodes: Boolean(opts.colorizeNodes),
+        glass: Boolean(opts.glass),
         scale: Number(opts.scale),
       })
 

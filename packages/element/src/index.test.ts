@@ -12,6 +12,25 @@ const graph = createGraph(
 )
 
 describe('DiagramKitElement', () => {
+  it('switches descriptions between the panel and entity box', () => {
+    const el = document.createElement('diagram-kit-view') as DiagramKitElement
+    document.body.appendChild(el)
+    el.graph = graph
+    const clickNode = () => el.shadowRoot!.querySelector('[data-node-id="a"]')!.dispatchEvent(new Event('click', { bubbles: true }))
+    clickNode()
+    const panel = el.shadowRoot!.querySelector('.dk-panel')!
+    expect(panel.classList.contains('dk-panel-open')).toBe(true)
+    el.setAttribute('detail-placement', 'inline')
+    expect(panel.classList.contains('dk-panel-open')).toBe(false)
+    expect(el.shadowRoot!.querySelector('svg')!.textContent).toContain('Node A detail')
+    clickNode()
+    expect(panel.classList.contains('dk-panel-open')).toBe(false)
+    el.setAttribute('detail-placement', 'panel')
+    expect(el.shadowRoot!.querySelector('svg')!.textContent).not.toContain('Node A detail')
+    clickNode()
+    expect(panel.classList.contains('dk-panel-open')).toBe(true)
+    el.remove()
+  })
   beforeEach(() => {
     defineDiagramKitElement()
   })

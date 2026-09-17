@@ -1,8 +1,10 @@
 import type { DiagramGraph } from './graph.js'
 import type { PositionedGraph, PositionedNode } from './layout.js'
 import { estimateNodeWidth, estimateTextWidth } from './textWidth.js'
+import { detailHeight } from './detailText.js'
 
 export interface StructuralLayoutOptions {
+  showDetails?: boolean
   /** Inner padding between a container's border and its children. Default 16. */
   padding?: number
   /** Gap between sibling boxes, both within a row and between rows. Default 10. */
@@ -21,6 +23,7 @@ export interface StructuralLayoutOptions {
 }
 
 const DEFAULTS: Required<StructuralLayoutOptions> = {
+  showDetails: false,
   padding: 16,
   gap: 10,
   leafWidth: 140,
@@ -86,7 +89,7 @@ export function layoutStructural(graph: DiagramGraph, options: StructuralLayoutO
         minWidth: opts.leafWidth,
         maxWidth: opts.nodeSizing === 'fixed' ? opts.leafWidth : opts.maxLeafWidth,
       })
-      size = { width, height: opts.leafHeight }
+      size = { width, height: opts.leafHeight + detailHeight(node, width, opts.showDetails) }
     } else {
       const childSizes = childIds.map(measure)
       const rows = wrapIntoRows(childSizes, opts.gap, opts.maxRowWidth)
@@ -103,6 +106,7 @@ export function layoutStructural(graph: DiagramGraph, options: StructuralLayoutO
         width: Math.max(contentWidth + opts.padding * 2, headerWidth),
         height: contentHeight + opts.padding * 2 + opts.headerHeight,
       }
+      size.height += detailHeight(node, size.width, opts.showDetails)
     }
     sizeCache.set(id, size)
     return size
@@ -122,7 +126,7 @@ export function layoutStructural(graph: DiagramGraph, options: StructuralLayoutO
     const children = childIds.map((childId) => ({ id: childId, ...sizeCache.get(childId)! }))
     const rows = wrapIntoRows(children, opts.gap, opts.maxRowWidth)
 
-    let cursorY = y + opts.padding + opts.headerHeight
+    let cursorY = y + opts.padding + opts.headerHeight + detailHeight(nodeById.get(id)!, size.width, opts.showDetails)
     for (const row of rows) {
       let cursorX = x + opts.padding
       const rowHeight = Math.max(...row.map((c) => c.height))

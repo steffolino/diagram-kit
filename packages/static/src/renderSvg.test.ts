@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createGraph, generateTheme } from '@diagram-kit/core'
+import { createGraph, generateTheme, layoutGraph, estimateTextWidth } from '@diagram-kit/core'
 import { renderSvg } from './renderSvg.js'
 
 const graph = createGraph(
@@ -11,6 +11,29 @@ const graph = createGraph(
 )
 
 describe('renderSvg', () => {
+  it.each(['graph', 'structural', 'stack', 'cycle'] as const)('exports escaped inline descriptions in %s layout', (layoutMode) => {
+    const graph = createGraph([{ id: 'a', label: 'API', detail: 'A < B & C' }])
+    expect(renderSvg(graph, { layoutMode })).not.toContain('A &lt; B &amp; C')
+    const svg = renderSvg(graph, { layoutMode, detailPlacement: 'inline' })
+    expect(svg).toContain('A &lt; B &amp; C')
+    expect(svg.indexOf('>API<')).toBeLessThan(svg.indexOf('A &lt; B &amp; C'))
+  })
+
+  it.each(['rect', 'cylinder'] as const)('centers the dot, label and badge in %s nodes', (shape) => {
+    for (const badge of [undefined, 'planned']) {
+      const graph = createGraph([{ id: 'a', label: 'API', shape, badge }])
+      const position = layoutGraph(graph).nodes[0]!
+      const svg = renderSvg(graph, { padding: 40 })
+      const dotX = Number(/<circle cx="([^"]+)"/.exec(svg)![1])
+      const labelX = Number(/<text x="([^"]+)"/.exec(svg)![1])
+      const labelWidth = estimateTextWidth('API', 12)
+      const right = labelX + labelWidth / 2 + (badge ? 6 + estimateTextWidth(badge, 10) : 0)
+      expect(((dotX - 4) + right) / 2).toBeCloseTo(position.x + 40)
+      expect(svg).toContain('text-anchor="middle"')
+      if (badge) expect(svg).toContain('>planned</text>')
+    }
+  })
+
   it('produces a well-formed SVG document containing every node label', () => {
     const svg = renderSvg(graph)
     expect(svg.startsWith('<svg')).toBe(true)

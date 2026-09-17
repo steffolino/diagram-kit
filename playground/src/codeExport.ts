@@ -10,6 +10,7 @@ export interface CodeExportOptions {
   glass: boolean
   showDetailPanel: boolean
   detailPanelPosition: DetailPanelPosition
+  detailPlacement: 'panel' | 'inline'
   padding: number
 }
 
@@ -46,10 +47,12 @@ export function MyDiagram() {
       layoutMode="${options.layoutMode}"${layoutProp}
       theme={theme}
       mode="${options.mode}"
+      padding={${options.padding}}
       colorizeNodes={${options.colorizeNodes}}
       glass={${options.glass}}
       showDetailPanel={${options.showDetailPanel}}
       detailPanelPosition="${options.detailPanelPosition}"
+      detailPlacement="${options.detailPlacement}"
     />
   )
 }
@@ -69,6 +72,7 @@ export function generateElementSnippet(graph: DiagramGraph, options: CodeExportO
     options.layoutMode === 'graph' ? `direction="${options.direction}"` : null,
     `mode="${options.mode}"`,
     `padding="${options.padding}"`,
+    `detail-placement="${options.detailPlacement}"`,
     options.colorizeNodes ? 'colorize-nodes' : null,
   ]
     .filter((attr): attr is string => attr !== null)

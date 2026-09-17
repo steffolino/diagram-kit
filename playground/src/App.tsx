@@ -3,6 +3,7 @@ import {
   generateTheme,
   themePresets,
   extractCssColors,
+  validateGraph,
   type DiagramTheme,
   type LayoutOptions,
   type ThemePresetName,
@@ -212,10 +213,6 @@ const SCRUM_SAMPLE_YAML = `nodes:
     label: Product Backlog
     category: presentation
     detail: Prioritized, ever-evolving list of everything that might be needed in the product, owned by the Product Owner.
-  - id: refinement
-    label: Backlog Refinement
-    category: application
-    detail: Ongoing activity where the team adds detail, estimates, and order to backlog items.
   - id: planning
     label: Sprint Planning
     category: application
@@ -224,44 +221,47 @@ const SCRUM_SAMPLE_YAML = `nodes:
     label: Sprint Backlog
     category: infrastructure
     detail: The subset of the Product Backlog selected for the Sprint, plus a plan for delivering it.
+  - id: sprint
+    label: Sprint
+    badge: 1–4 weeks
+    category: application
+    detail: Build, test, and adapt toward the Sprint Goal. Each Sprint produces a usable Increment.
   - id: daily-scrum
     label: Daily Scrum
+    badge: 24 h
     category: core
     detail: A short daily event for the Developers to inspect progress and adapt the plan.
-  - id: increment
-    label: Increment
-    category: infrastructure
-    detail: A concrete, usable step toward the product goal, meeting the Definition of Done.
   - id: review
-    label: Sprint Review
+    label: Review & Retrospective
     category: external
-    detail: Stakeholders inspect the Increment and adapt the Product Backlog.
-  - id: retro
-    label: Sprint Retrospective
-    category: application
-    detail: The team inspects how the last Sprint went and plans improvements.
+    detail: Inspect the Increment with stakeholders, adapt the backlog, and improve the way the team works for the next Sprint.
+  - id: increment
+    label: Delivery
+    category: core
+    detail: A usable Increment that meets the Definition of Done.
 
 edges:
-  - from: backlog
-    to: refinement
-  - from: refinement
-    to: backlog
-    projected: true
+  - from: sprint
+    to: sprint
+    style: block
+  - from: daily-scrum
+    to: daily-scrum
+    style: block
   - from: backlog
     to: planning
+    style: block
   - from: planning
     to: sprint-backlog
+    style: block
   - from: sprint-backlog
-    to: daily-scrum
-  - from: daily-scrum
-    to: increment
-  - from: increment
+    to: sprint
+    style: block
+  - from: sprint
     to: review
+    style: block
   - from: review
-    to: retro
-  - from: retro
-    to: backlog
-    label: next sprint
+    to: increment
+    style: block
 `
 
 const SAMPLES: Record<string, { source: string; format: InputFormat; layoutMode: LayoutMode }> = {
@@ -280,7 +280,7 @@ const SAMPLES: Record<string, { source: string; format: InputFormat; layoutMode:
     format: 'tree',
     layoutMode: 'structural',
   },
-  'graph (standard Scrum process, YAML)': { source: SCRUM_SAMPLE_YAML, format: 'yaml', layoutMode: 'graph' },
+  'cycle (Scrum process, landscape, YAML)': { source: SCRUM_SAMPLE_YAML, format: 'yaml', layoutMode: 'cycle' },
 }
 
 // Which sample to load when the person switches "Input format" directly
@@ -323,7 +323,7 @@ function ToggleGroup<T extends string>({
         <button
           key={option}
           type="button"
-          onClick={() => onChange(option)}
+          onClick={() => option !== value && onChange(option)}
           style={{
             flex: '1 0 auto',
             padding: '4px 8px',
@@ -516,6 +516,7 @@ export function App(): JSX.Element {
   const [direction, setDirection] = useState<NonNullable<LayoutOptions['direction']>>('TB')
   const [detailPanelPosition, setDetailPanelPosition] = useState<DetailPanelPosition>('right')
   const [showDetailPanel, setShowDetailPanel] = useState(true)
+  const [detailPlacement, setDetailPlacement] = useState<'panel' | 'inline'>('panel')
   const [glass, setGlass] = useState(false)
   const [colorizeNodes, setColorizeNodes] = useState(false)
   const [exportScale, setExportScale] = useState(2)
@@ -528,7 +529,12 @@ export function App(): JSX.Element {
     }
     try {
       const parse = inputFormat === 'json' ? fromJson : inputFormat === 'tree' ? fromTreeText : fromYaml
-      return { graph: parse(textSource), error: null as string | null }
+      const parsed = parse(textSource)
+      // Adapters don't validate on their own (e.g. an edge left pointing at
+      // a node you just deleted) — catch that here instead of letting it
+      // throw uncaught deeper in layout/render.
+      validateGraph(parsed)
+      return { graph: parsed, error: null as string | null }
     } catch (e) {
       return { graph: null, error: e instanceof Error ? e.message : String(e) }
     }
@@ -550,16 +556,72 @@ export function App(): JSX.Element {
       return
     }
     const byName = new Map(extracted.map((c) => [c.name.toLowerCase(), c.value]))
-    const leftover = extracted.map((c) => c.value).filter((v) => !graphCategories.some((cat) => byName.get(cat.toLowerCase()) === v))
-    let leftoverIndex = 0
-    const next = { ...categoryColorMap }
-    for (const category of graphCategories) {
-      const matched = byName.get(category.toLowerCase())
-      next[category] = matched ?? leftover[leftoverIndex++ % leftover.length] ?? extracted[0]!.value
+    const applied: string[] = []
+
+    // Only a handful of design-system token names are common enough to
+    // guess the intent of. Everything else in the paste (chart-4,
+    // sidebar-ring, whatever) is left alone rather than grabbed at random.
+    // shadcn/ui uses plain names ("primary", "background"); Tailwind v4
+    // @theme blocks and daisyUI 5 (which now follows Tailwind v4's
+    // convention, e.g. --color-primary, --color-base-100) prefix with
+    // "color-"; NuxtUI prefixes with "ui-" (--ui-primary, --ui-border) but
+    // names its background "bg", not "background" (--ui-bg).
+    const resolveToken = (name: string): string | undefined =>
+      byName.get(name) ?? byName.get(`color-${name}`) ?? byName.get(`ui-${name}`)
+    const backgroundToken = resolveToken('background') ?? resolveToken('base-100') ?? resolveToken('bg')
+    const borderToken = resolveToken('border')
+    // "primary" is the closest thing a design-system file has to a single
+    // brand color — it lands on the connector/edge color, the one slot
+    // that's always visible regardless of whether the graph has categories
+    // at all (falls back to secondary/accent if there's no "primary").
+    const accentToken = resolveToken('primary') ?? resolveToken('secondary') ?? resolveToken('accent')
+    if (backgroundToken) {
+      setCustomBackground(backgroundToken)
+      applied.push('background')
     }
-    setCategoryColorMap(next)
-    setPaletteSource('explicit')
-    setCssImportMessage(`Applied ${extracted.length} color${extracted.length === 1 ? '' : 's'} to ${graphCategories.length} categor${graphCategories.length === 1 ? 'y' : 'ies'}.`)
+    if (borderToken) {
+      setCustomBorder(borderToken)
+      applied.push('border')
+    }
+    if (accentToken) {
+      setCustomAccent(accentToken)
+      applied.push('edge color')
+    }
+
+    if (graphCategories.length > 0) {
+      // Same small whitelist, used to fill in categories that don't have an
+      // exact name match — cycled in order, one token per unmatched
+      // category. Any category beyond what the whitelist covers keeps its
+      // existing color rather than reusing an arbitrary leftover value.
+      const categoryTokens = (['primary', 'secondary', 'accent'] as const)
+        .map((name) => resolveToken(name))
+        .filter((value): value is string => Boolean(value))
+      let tokenIndex = 0
+      const next = { ...categoryColorMap }
+      let categoriesChanged = false
+      for (const category of graphCategories) {
+        const matched = resolveToken(category.toLowerCase())
+        if (matched) {
+          next[category] = matched
+          categoriesChanged = true
+        } else if (categoryTokens[tokenIndex]) {
+          next[category] = categoryTokens[tokenIndex]!
+          tokenIndex++
+          categoriesChanged = true
+        }
+      }
+      if (categoriesChanged) {
+        setCategoryColorMap(next)
+        setPaletteSource('explicit')
+        applied.push('categories')
+      }
+    }
+
+    setCssImportMessage(
+      applied.length > 0
+        ? `Applied recognized colors (${applied.join(', ')}) from the pasted CSS.`
+        : 'Found colors, but none matched a recognized name (background/border/primary/secondary/accent) or an existing category name.',
+    )
   }
 
   // Keep the named color map in sync with whatever categories are actually
@@ -586,20 +648,25 @@ export function App(): JSX.Element {
 
   const [customBackground, setCustomBackground] = useState<string | null>(null)
   const [customBorder, setCustomBorder] = useState<string | null>(null)
+  const [customAccent, setCustomAccent] = useState<string | null>(null)
 
   // Independent of palette choice: overrides just the active mode's
-  // background/border, leaving categories/surface/etc. from the theme alone.
+  // background/border/edge, leaving categories/surface/etc. from the theme
+  // alone. Edge (the default connector color) is what a brand "primary"
+  // color lands on — it's the one always-visible slot that doesn't need
+  // the graph to have categories to show up.
   const displayTheme: DiagramTheme = useMemo(() => {
-    if (!customBackground && !customBorder) return theme
+    if (!customBackground && !customBorder && !customAccent) return theme
     return {
       ...theme,
       [mode]: {
         ...theme[mode],
         ...(customBackground ? { background: customBackground } : {}),
         ...(customBorder ? { border: customBorder } : {}),
+        ...(customAccent ? { edge: customAccent } : {}),
       },
     }
-  }, [theme, mode, customBackground, customBorder])
+  }, [theme, mode, customBackground, customBorder, customAccent])
 
   const svg = useMemo(() => {
     if (!graph) return null
@@ -609,9 +676,11 @@ export function App(): JSX.Element {
       layoutMode,
       layout: { direction },
       padding: paddingPx,
+      detailPlacement,
       colorizeNodes,
+      glass,
     })
-  }, [graph, displayTheme, mode, layoutMode, direction, paddingPx, colorizeNodes])
+  }, [graph, displayTheme, mode, layoutMode, direction, paddingPx, colorizeNodes, detailPlacement, glass])
 
   const [codeFramework, setCodeFramework] = useState<'react' | 'element'>('react')
   const [codeCopied, setCodeCopied] = useState(false)
@@ -626,6 +695,7 @@ export function App(): JSX.Element {
       colorizeNodes,
       glass,
       showDetailPanel,
+      detailPlacement,
       detailPanelPosition,
       padding: paddingPx,
     }
@@ -640,6 +710,7 @@ export function App(): JSX.Element {
     colorizeNodes,
     glass,
     showDetailPanel,
+    detailPlacement,
     detailPanelPosition,
     paddingPx,
   ])
@@ -713,6 +784,7 @@ export function App(): JSX.Element {
                 setInputFormat(sample.format)
                 setTextSource(sample.source)
                 setLayoutMode(sample.layoutMode)
+                if (sample.layoutMode === 'cycle') setDirection('LR')
               }}
             >
               {Object.keys(SAMPLES).map((name) => (
@@ -803,12 +875,14 @@ export function App(): JSX.Element {
             hint={
               layoutMode === 'graph'
                 ? 'Real dagre auto-layout; edges drawn as routed lines or block arrows.'
+                : layoutMode === 'cycle'
+                  ? 'Left-to-right process with a sprint loop and smaller daily loop.'
                 : layoutMode === 'structural'
                   ? 'Nested boxes from parent/child containment. No connector lines — nesting is the relationship.'
                   : 'Flat sequential list, no hierarchy, no connectors.'
             }
           >
-            <ToggleGroup value={layoutMode} options={['graph', 'structural', 'stack'] as const} onChange={setLayoutMode} />
+            <ToggleGroup value={layoutMode} options={['graph', 'structural', 'stack', 'cycle'] as const} onChange={setLayoutMode} />
           </Field>
         </Section>
 
@@ -867,6 +941,35 @@ export function App(): JSX.Element {
                 <button
                   type="button"
                   onClick={() => setCustomBorder(null)}
+                  style={{ fontSize: 11, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          </Field>
+
+          <Field
+            label="Edge color"
+            hint={`Overrides just the ${mode} theme's default connector color (not category-colored or projected edges).`}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input
+                type="color"
+                value={customAccent ?? theme[mode].edge}
+                onChange={(e) => setCustomAccent(e.target.value)}
+                style={{ width: 28, height: 24, padding: 0, border: 'none', background: 'none', flexShrink: 0 }}
+              />
+              <input
+                type="text"
+                value={customAccent ?? theme[mode].edge}
+                onChange={(e) => setCustomAccent(e.target.value)}
+                style={{ flex: 1, fontSize: 12, fontFamily: 'monospace', padding: '2px 6px', minWidth: 0 }}
+              />
+              {customAccent && (
+                <button
+                  type="button"
+                  onClick={() => setCustomAccent(null)}
                   style={{ fontSize: 11, padding: '4px 8px', border: '1px solid #DADCE0', borderRadius: 4, background: 'none', cursor: 'pointer' }}
                 >
                   Reset
@@ -1002,7 +1105,7 @@ export function App(): JSX.Element {
           {paletteSource === 'explicit' && (
             <Field
               label="Import from CSS"
-              hint="Paste CSS custom properties (--brand: #3b82f6;, Tailwind v4's @theme block) or a tailwind.config colors: {...} object. Colors get matched to categories by name where they match, then filled in order."
+              hint={'Paste CSS custom properties — shadcn/ui, NuxtUI ("ui-primary"), Tailwind v4 @theme or daisyUI 5 ("color-primary") naming all work — or a tailwind.config colors: {...} object. "background"/"border" map to the diagram\'s chrome, "primary"/"secondary"/"accent" to the edge color and to categories without an exact name match — anything else is left alone.'}
             >
               <textarea
                 value={cssImportSource}
@@ -1059,7 +1162,13 @@ export function App(): JSX.Element {
             </Field>
           )}
 
-          <Field
+          <Field label="Description placement" hint="Show descriptions on click, or always underneath each entity title (also included in exports).">
+            <select value={detailPlacement} onChange={(e) => setDetailPlacement(e.target.value as 'panel' | 'inline')}>
+              <option value="panel">Side panel on click</option>
+              <option value="inline">Inside entity box</option>
+            </select>
+          </Field>
+          {detailPlacement === 'panel' && <Field
             label="Detail panel (drawer)"
             hint="The popup that opens with a node's longer description when you click it."
           >
@@ -1083,7 +1192,7 @@ export function App(): JSX.Element {
                 ))}
               </select>
             )}
-          </Field>
+          </Field>}
         </Section>
 
         <Section title="Export" defaultOpen>
@@ -1168,16 +1277,18 @@ export function App(): JSX.Element {
         </Section>
       </div>
 
-      <div style={{ flex: 1, overflow: 'auto', background: displayTheme[mode].background, padding: paddingPx }}>
+      <div style={{ flex: 1, overflow: 'auto', background: displayTheme[mode].background }}>
         {graph && (
           <DiagramView
             graph={graph}
+            padding={paddingPx}
             layoutMode={layoutMode}
             layout={{ direction }}
             theme={displayTheme}
             mode={mode}
             showDetailPanel={showDetailPanel}
             detailPanelPosition={detailPanelPosition}
+            detailPlacement={detailPlacement}
             glass={glass}
             colorizeNodes={colorizeNodes}
           />

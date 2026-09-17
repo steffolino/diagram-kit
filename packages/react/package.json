@@ -4,6 +4,16 @@
   "description": "Interactive React renderer for diagram-kit graphs: auto-layout, click-to-select detail panel.",
   "license": "MIT",
   "author": "Stefan Stretz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffolino/diagram-kit.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/steffolino/diagram-kit/tree/master/packages/react#readme",
+  "bugs": "https://github.com/steffolino/diagram-kit/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["diagram", "react", "graph", "visualization", "architecture-diagram"],
   "type": "module",
   "sideEffects": false,

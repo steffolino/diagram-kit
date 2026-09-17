@@ -4,6 +4,16 @@
   "description": "Normalized graph model, auto-layout, and theme tokens shared by every diagram-kit renderer and adapter.",
   "license": "MIT",
   "author": "Stefan Stretz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffolino/diagram-kit.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/steffolino/diagram-kit/tree/master/packages/core#readme",
+  "bugs": "https://github.com/steffolino/diagram-kit/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["diagram", "graph", "layout", "dagre", "visualization"],
   "type": "module",
   "sideEffects": false,

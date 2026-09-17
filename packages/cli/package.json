@@ -4,6 +4,16 @@
   "description": "Command-line rendering for diagram-kit: turn YAML/JSON/Mermaid/tree/directory input into an SVG or PNG diagram without writing any code.",
   "license": "MIT",
   "author": "Stefan Stretz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffolino/diagram-kit.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/steffolino/diagram-kit/tree/master/packages/cli#readme",
+  "bugs": "https://github.com/steffolino/diagram-kit/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["diagram", "cli", "svg", "png", "graph", "visualization"],
   "type": "module",
   "bin": {

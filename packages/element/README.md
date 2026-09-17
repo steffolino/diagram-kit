@@ -1,5 +1,8 @@
 # @steffolino/diagram-kit-element
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-element.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-element)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-element.svg)](../../LICENSE)
+
 `<diagram-kit-view>` — the framework-agnostic way to embed an interactive
 diagram-kit graph. It's a real Custom Element (Web Component), so it works
 with a plain `<script type="module">` import in React, Vue, Angular, or no

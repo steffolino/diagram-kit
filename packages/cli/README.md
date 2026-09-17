@@ -1,5 +1,8 @@
 # @steffolino/diagram-kit-cli
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-cli.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-cli)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-cli.svg)](../../LICENSE)
+
 Render a diagram-kit graph (YAML, JSON, Mermaid, tree text, or a directory) to
 an SVG or PNG file, without writing any code.
 

@@ -14,6 +14,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": ["diagram", "svg", "png", "export", "static"],
   "type": "module",
   "sideEffects": false,

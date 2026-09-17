@@ -1,5 +1,9 @@
 # diagram-kit
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-core.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-core)
+[![CI](https://github.com/steffolino/diagram-kit/actions/workflows/release.yml/badge.svg)](https://github.com/steffolino/diagram-kit/actions/workflows/release.yml)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-core.svg)](LICENSE)
+
 MIT-licensed library for generating technical diagrams — architecture maps,
 entity-relationship diagrams, directory structures — from real inputs
 (YAML specs, a directory tree, Mermaid syntax, or a source-code AST
@@ -42,7 +46,43 @@ exported as a static SVG/PNG for slides.
 
 ## Usage
 
+Start from a YAML spec — the same shape `fromMermaid` and `fromDirectory`
+normalize into too:
+
+```yaml
+# architecture.yaml
+nodes:
+  - id: api
+    label: API
+    category: presentation
+  - id: domain
+    label: Domain
+    category: core
+  - id: db
+    label: Database
+    category: infra
+edges:
+  - { from: api, to: domain, label: calls }
+  - { from: domain, to: db, label: reads/writes }
+```
+
+Render it to an SVG string — no browser, no React, works in a Node script or
+a build step:
+
 ```ts
+import { readFileSync, writeFileSync } from 'node:fs'
+import { fromYaml } from '@steffolino/diagram-kit-adapters'
+import { renderSvg } from '@steffolino/diagram-kit-static'
+
+const graph = fromYaml(readFileSync('architecture.yaml', 'utf8'))
+writeFileSync('architecture.svg', renderSvg(graph, { layoutMode: 'graph' }))
+```
+
+Or drop the same graph into an interactive React component — same layout
+engine, same theme, so the embedded view and the exported SVG stay visually
+consistent:
+
+```tsx
 import { fromYaml } from '@steffolino/diagram-kit-adapters'
 import { DiagramView } from '@steffolino/diagram-kit-react'
 
@@ -53,11 +93,25 @@ function Diagram() {
 }
 ```
 
-```ts
-import { fromYaml } from '@steffolino/diagram-kit-adapters'
-import { renderPng } from '@steffolino/diagram-kit-static'
+No React needed — `@steffolino/diagram-kit-element` registers
+`<diagram-kit-view>` as a real Custom Element that works from plain HTML,
+Vue, or Angular too:
 
-const png = renderPng(fromYaml(yamlSource), { scale: 2 })
+```html
+<diagram-kit-view id="view" layout-mode="graph"></diagram-kit-view>
+<script type="module">
+  import '@steffolino/diagram-kit-element'
+  import { fromYaml } from '@steffolino/diagram-kit-adapters'
+
+  const res = await fetch('architecture.yaml')
+  document.getElementById('view').graph = fromYaml(await res.text())
+</script>
+```
+
+Or skip the library entirely and render from the command line:
+
+```sh
+npx @steffolino/diagram-kit-cli render architecture.yaml -o architecture.svg
 ```
 
 ## Development

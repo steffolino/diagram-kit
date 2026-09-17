@@ -1,5 +1,8 @@
 # @steffolino/diagram-kit-react
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-react.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-react)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-react.svg)](../../LICENSE)
+
 Interactive React renderer for `@steffolino/diagram-kit-core` graphs: real `dagre`
 auto-layout, click-to-select detail panel.
 

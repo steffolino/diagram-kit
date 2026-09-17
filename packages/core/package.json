@@ -14,6 +14,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": ["diagram", "graph", "layout", "dagre", "visualization"],
   "type": "module",
   "sideEffects": false,

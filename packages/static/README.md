@@ -1,5 +1,8 @@
 # @steffolino/diagram-kit-static
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-static.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-static)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-static.svg)](../../LICENSE)
+
 Headless SVG/PNG export for `@steffolino/diagram-kit-core` graphs — for slides and
 presentations, not embedding. Uses `@resvg/resvg-js` (prebuilt native
 bindings, no local build toolchain needed).

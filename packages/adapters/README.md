@@ -1,5 +1,8 @@
 # @steffolino/diagram-kit-adapters
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-adapters.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-adapters)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-adapters.svg)](../../LICENSE)
+
 Turns an input format into a `@steffolino/diagram-kit-core` `DiagramGraph`.
 
 ```ts

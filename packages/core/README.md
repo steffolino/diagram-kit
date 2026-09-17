@@ -1,5 +1,8 @@
 # @steffolino/diagram-kit-core
 
+[![npm](https://img.shields.io/npm/v/@steffolino/diagram-kit-core.svg)](https://www.npmjs.com/package/@steffolino/diagram-kit-core)
+[![license](https://img.shields.io/npm/l/@steffolino/diagram-kit-core.svg)](../../LICENSE)
+
 Normalized `{ nodes, edges }` graph model, `dagre`-based auto-layout, and
 light/dark theme tokens shared by every diagram-kit renderer and adapter.
 Framework-agnostic — no React, no DOM.

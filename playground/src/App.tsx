@@ -445,7 +445,18 @@ function Section({
 // the diagram (rather than pushing it over) at every viewport width, with
 // its own width narrowing on small screens.
 const RESPONSIVE_CSS = `
-  html, body { margin: 0; padding: 0; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /* The page itself must never scroll — only the drawer and the diagram
+       viewport (each has its own overflow: auto) are allowed to. Without
+       this, a touch-drag can end up scrolling the whole page instead of
+       the drawer's content, which looks identical to "the drawer doesn't
+       scroll" from the user's side. */
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   .dk-app-root { height: 100vh; }
   .dk-section { border-top: 1px solid #EEEEF0; padding-top: 12px; }
   .dk-section:first-of-type { border-top: none; padding-top: 0; }

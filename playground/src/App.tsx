@@ -14,6 +14,7 @@ import { DiagramView, type DetailPanelPosition, type LayoutMode } from '@diagram
 import { downloadPng, downloadSvg } from './exportGraph.js'
 import { treeFromFileList } from './loadDirectory.js'
 import { generateElementSnippet, generateReactSnippet } from './codeExport.js'
+import { ZoomPane } from './ZoomPane.js'
 
 type InputFormat = 'yaml' | 'json' | 'tree' | 'folder'
 
@@ -1276,7 +1277,10 @@ export function App(): JSX.Element {
         </Section>
       </div>
 
-      <div style={{ flex: 1, overflow: 'auto', background: displayTheme[mode].background }}>
+      <ZoomPane
+        background={displayTheme[mode].background}
+        fitDeps={[graph, layoutMode, direction, paddingPx, detailPlacement]}
+      >
         {graph && (
           <DiagramView
             graph={graph}
@@ -1292,7 +1296,7 @@ export function App(): JSX.Element {
             colorizeNodes={colorizeNodes}
           />
         )}
-      </div>
+      </ZoomPane>
     </div>
   )
 }

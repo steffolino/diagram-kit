@@ -1,6 +1,6 @@
 {
   "name": "@steffolino/diagram-kit-static",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Headless SVG/PNG export for diagram-kit graphs, for slides and presentations rather than embedding.",
   "license": "MIT",
   "author": "Stefan Stretz",

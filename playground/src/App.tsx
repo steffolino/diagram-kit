@@ -440,8 +440,9 @@ function Section({
 }
 
 // One injected stylesheet for the bits inline styles can't express: the
-// details/summary marker, and the media query that turns the params panel
-// into an off-canvas drawer below 768px.
+// details/summary marker, and the always-on off-canvas drawer that overlays
+// the diagram (rather than pushing it over) at every viewport width, with
+// its own width narrowing on small screens.
 const RESPONSIVE_CSS = `
   .dk-section { border-top: 1px solid #EEEEF0; padding-top: 12px; }
   .dk-section:first-of-type { border-top: none; padding-top: 0; }
@@ -455,41 +456,40 @@ const RESPONSIVE_CSS = `
   .dk-section-summary::-webkit-details-marker { display: none; }
   .dk-section-summary::before { content: '▸ '; color: #8A909B; }
   .dk-section[open] > .dk-section-summary::before { content: '▾ '; }
-  .dk-panel { width: 340px; box-sizing: border-box; }
-  .dk-menu-button { display: none; }
-  .dk-scrim { display: none; }
-  @media (max-width: 768px) {
-    .dk-panel {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 40;
-      transform: translateX(-100%);
-      transition: transform 0.2s ease;
-      box-shadow: 2px 0 16px rgba(0, 0, 0, 0.2);
-      width: 85vw;
-      max-width: 340px;
-    }
-    .dk-panel.dk-panel-open { transform: translateX(0); }
-    .dk-menu-button {
-      display: inline-flex;
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      z-index: 20;
-    }
-    .dk-scrim {
-      display: block;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.35);
-      z-index: 30;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-    .dk-scrim.dk-scrim-visible { opacity: 1; pointer-events: auto; }
+  .dk-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.2);
+    width: 340px;
+    max-width: 85vw;
+    box-sizing: border-box;
+  }
+  .dk-panel.dk-panel-open { transform: translateX(0); }
+  .dk-menu-button {
+    display: inline-flex;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 20;
+  }
+  .dk-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .dk-scrim.dk-scrim-visible { opacity: 1; pointer-events: auto; }
+  @media (max-width: 480px) {
+    .dk-panel { width: 100vw; max-width: 100vw; }
   }
 `
 
@@ -521,7 +521,7 @@ export function App(): JSX.Element {
   const [colorizeNodes, setColorizeNodes] = useState(false)
   const [exportScale, setExportScale] = useState(2)
   const [paddingPx, setPaddingPx] = useState(32)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true)
 
   const { graph, error } = useMemo(() => {
     if (inputFormat === 'folder') {
@@ -766,8 +766,7 @@ export function App(): JSX.Element {
             type="button"
             aria-label="Close params"
             onClick={() => setIsDrawerOpen(false)}
-            className="dk-menu-button"
-            style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#5B6270' }}
+            style={{ flexShrink: 0, background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#5B6270' }}
           >
             ✕
           </button>

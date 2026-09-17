@@ -5,7 +5,16 @@
     { "repo": "steffolino/diagram-kit" }
   ],
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@steffolino/diagram-kit-core",
+      "@steffolino/diagram-kit-adapters",
+      "@steffolino/diagram-kit-react",
+      "@steffolino/diagram-kit-static",
+      "@steffolino/diagram-kit-element",
+      "@steffolino/diagram-kit-cli"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "master",
